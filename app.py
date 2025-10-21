@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template_string
+from flask import Flask, jsonify, render_template_string, request
 import psycopg2
 
 app = Flask(__name__)
@@ -16,9 +16,6 @@ def get_db_connection():
     return conn
 
 @app.route('/')
-# def home():
-#     return 'Flask + PostgreSQL connected successfully! 🚀'
-
 def home():
     rows = get_users()
 
@@ -44,10 +41,25 @@ def home():
     return render_template_string(html, rows=rows)
 
 @app.route('/users')
+# def get_users():
+#     conn = get_db_connection()
+#     cur = conn.cursor()
+#     cur.execute('SELECT id, name, age FROM test;')  
+#     rows = cur.fetchall()
+#     cur.close()
+#     conn.close()
+#     return rows
+
 def get_users():
+    name = request.args.get('name')  
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT id, name, age FROM test;')  
+
+    if name:  
+        cur.execute('SELECT id, name, age FROM test WHERE name = %s ORDER BY id;', (name,))
+    else:   
+        cur.execute('SELECT id, name, age FROM test ORDER BY id;')
+
     rows = cur.fetchall()
     cur.close()
     conn.close()
