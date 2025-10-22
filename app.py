@@ -24,13 +24,13 @@ def home():
         <head><title>Flask + PostgreSQL</title></head>
         <body style="font-family: sans-serif;">
             <h2>รายชื่อผู้ใช้จากตาราง test</h2>
-            <table border="1" cellpadding="8" cellspacing="0">
+            <table border="5" cellpadding="10" cellspacing="0">
                 <tr><th>ID</th><th>Name</th><th>Age</th></tr>
                 {% for id, name, age in rows %}
                     <tr>
                         <td>{{ id }}</td>
                         <td>{{ name }}</td>
-                        <td>{{ age }}</td>
+                        <td>{{ age }} years old</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -55,9 +55,9 @@ def get_users():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    if name:  
+    if name:
         cur.execute('SELECT id, name, age FROM test WHERE name = %s ORDER BY id;', (name,))
-    else:   
+    else: 
         cur.execute('SELECT id, name, age FROM test ORDER BY id;')
 
     rows = cur.fetchall()
